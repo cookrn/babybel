@@ -48,52 +48,46 @@ RSpec.describe "Minibel Parser" do
                           (map f (cdr (car ls))))
                     (cons (apply f (map car ls))
                           (apply map f (map cdr ls)))))
+
+(mac fn (parms . body)
+  (if (no (cdr body))
+      `(list 'lit 'clo scope ',parms ',(car body))
+      `(list 'lit 'clo scope ',parms '(do ,@body))))
+
+(set vmark (join))
+
+(def uvar ()
+  (list vmark))
+
+(mac do args
+  (reduce (fn (x y)
+            (list (list 'fn (uvar) y) x))
+          args))
+
+(mac let (parms val . body)
+  `((fn (,parms) ,@body) ,val))
+
+(mac macro args
+  `(list 'lit 'mac (fn ,@args)))
+
+(mac def (n . rest)
+  `(set ,n (fn ,@rest)))
+
+(mac mac (n . rest)
+  `(set ,n (macro ,@rest)))
+
+(mac or args
+  (if (no args)
+      nil
+      (let v (uvar)
+        `(let ,v ,(car args)
+           (if ,v ,v (or ,@(cdr args)))))))
+
+(mac and args
+  (reduce (fn es (cons 'if es))
+          (or args '(t))))
 BEL
 
-
-# (mac fn (parms . body)
-#   (if (no (cdr body))
-#       `(list 'lit 'clo scope ',parms ',(car body))
-#       `(list 'lit 'clo scope ',parms '(do ,@body))))
-# 
-# (set vmark (join))
-# 
-# (def uvar ()
-#   (list vmark))
-# 
-# (mac do args
-#   (reduce (fn (x y)
-#             (list (list 'fn (uvar) y) x))
-#           args))
-# 
-# (mac let (parms val . body)
-#   `((fn (,parms) ,@body) ,val))
-# 
-# (mac macro args
-#   `(list 'lit 'mac (fn ,@args)))
-# 
-# (mac def (n . rest)
-#   `(set ,n (fn ,@rest)))
-# 
-# (mac mac (n . rest)
-#   `(set ,n (macro ,@rest)))
-# 
-# (mac or args
-#   (if (no args)
-#       nil
-#       (let v (uvar)
-#         `(let ,v ,(car args)
-#            (if ,v ,v (or ,@(cdr args)))))))
-# 
-# (mac and args
-#   (reduce (fn es (cons 'if es))
-#           (or args '(t))))
-# 
-# (def = args
-#   (if (no (cdr args))  t
-#       (some atom args) (all [id _ (car args)] (cdr args))
-#                        (and (apply = (map car args))
-#                             (apply = (map cdr args)))))
 # 
 # (def symbol (x) (= (type x) 'symbol))
 # 

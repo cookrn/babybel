@@ -160,4 +160,97 @@ RSpec.describe Babybel::Minibel do
       expect(result.first[:exp].last[:symbol]).to eq("qb")
     end
   end
+
+  context "backquote" do
+    it "parses one" do
+      result = nil
+      expect { result = subject.parse("`(q)") }.not_to raise_error
+      expect(result.first[:backquoted]).not_to be_nil
+      expect(result.first[:exp].first[:symbol]).to eq("q")
+    end
+
+    it "parses one pair" do
+      result = nil
+      expect { result = subject.parse("`(a . b)") }.not_to raise_error
+      expect(result.first[:backquoted]).not_to be_nil
+      expect(result.first[:pair][:left].first[:symbol]).to eq("a")
+      expect(result.first[:pair][:right][:symbol]).to eq("b")
+    end
+  end
+
+  context "unquote" do
+    it "parses one" do
+      result = nil
+      expect { result = subject.parse("`(,q)") }.not_to raise_error
+      expect(result.first[:backquoted]).not_to be_nil
+      expect(result.first[:exp].first[:unquoted]).not_to be_nil
+      expect(result.first[:exp].first[:symbol]).to eq("q")
+    end
+
+    it "parses one pair with left unquoted" do
+      result = nil
+      expect { result = subject.parse("`(,a . b)") }.not_to raise_error
+      expect(result.first[:backquoted]).not_to be_nil
+      expect(result.first[:pair][:left].first[:unquoted]).not_to be_nil
+      expect(result.first[:pair][:left].first[:symbol]).to eq("a")
+      expect(result.first[:pair][:right][:symbol]).to eq("b")
+    end
+
+    it "parses one pair with multiple left some unquoted" do
+      result = nil
+      expect { result = subject.parse("`(,a b . c)") }.not_to raise_error
+      expect(result.first[:backquoted]).not_to be_nil
+      expect(result.first[:pair][:left].first[:unquoted]).not_to be_nil
+      expect(result.first[:pair][:left].first[:symbol]).to eq("a")
+      expect(result.first[:pair][:left].last[:symbol]).to eq("b")
+      expect(result.first[:pair][:right][:symbol]).to eq("c")
+    end
+
+    it "parses one pair with right unquoted" do
+      result = nil
+      expect { result = subject.parse("`(a . ,b)") }.not_to raise_error
+      expect(result.first[:backquoted]).not_to be_nil
+      expect(result.first[:pair][:left].first[:symbol]).to eq("a")
+      expect(result.first[:pair][:right][:unquoted]).not_to be_nil
+      expect(result.first[:pair][:right][:symbol]).to eq("b")
+    end
+  end
+
+  context "splice" do
+    it "parses one" do
+      result = nil
+      expect { result = subject.parse("`(,@q)") }.not_to raise_error
+      expect(result.first[:backquoted]).not_to be_nil
+      expect(result.first[:exp].first[:spliced]).not_to be_nil
+      expect(result.first[:exp].first[:symbol]).to eq("q")
+    end
+
+    it "parses one pair with left spliced" do
+      result = nil
+      expect { result = subject.parse("`(,@a . b)") }.not_to raise_error
+      expect(result.first[:backquoted]).not_to be_nil
+      expect(result.first[:pair][:left].first[:spliced]).not_to be_nil
+      expect(result.first[:pair][:left].first[:symbol]).to eq("a")
+      expect(result.first[:pair][:right][:symbol]).to eq("b")
+    end
+
+    it "parses one pair with multiple left some spliced" do
+      result = nil
+      expect { result = subject.parse("`(,@a b . c)") }.not_to raise_error
+      expect(result.first[:backquoted]).not_to be_nil
+      expect(result.first[:pair][:left].first[:spliced]).not_to be_nil
+      expect(result.first[:pair][:left].first[:symbol]).to eq("a")
+      expect(result.first[:pair][:left].last[:symbol]).to eq("b")
+      expect(result.first[:pair][:right][:symbol]).to eq("c")
+    end
+
+    it "parses one pair with right spliced" do
+      result = nil
+      expect { result = subject.parse("`(a . ,@b)") }.not_to raise_error
+      expect(result.first[:backquoted]).not_to be_nil
+      expect(result.first[:pair][:left].first[:symbol]).to eq("a")
+      expect(result.first[:pair][:right][:spliced]).not_to be_nil
+      expect(result.first[:pair][:right][:symbol]).to eq("b")
+    end
+  end
 end
