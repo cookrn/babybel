@@ -21,32 +21,6 @@ RSpec.describe Babybel::Minibel do
     end
   end
 
-  # context "characters" do
-  #   it "parses one" do
-  #     result = nil
-  #     expect { result = subject.parse("(\\c)") }.not_to raise_error
-  #     expect(result.first[:exp].first[:character]).to eq("\\c")
-  #   end
-
-  #   it "parses one with spaces" do
-  #     result = nil
-  #     expect { result = subject.parse(" ( \\c ) ") }.not_to raise_error
-  #     expect(result.first[:exp].first[:character]).to eq("\\c")
-  #   end
-
-  #   it "parses one that is complex" do
-  #     result = nil
-  #     expect { result = subject.parse("(\\bel)") }.not_to raise_error
-  #     expect(result.first[:exp].first[:character]).to eq("\\bel")
-  #   end
-
-  #   it "parses one that is complex with spaces" do
-  #     result = nil
-  #     expect { result = subject.parse(" ( \\bel ) ") }.not_to raise_error
-  #     expect(result.first[:exp].first[:character]).to eq("\\bel")
-  #   end
-  # end
-
   context "pairs" do
     it "parses one with symbols" do
       result = nil
@@ -62,13 +36,6 @@ RSpec.describe Babybel::Minibel do
       expect(result.first[:exp].first[:pair][:right][:symbol]).to eq("b")
     end
 
-    # it "parses one with symbol and character" do
-    #   result = nil
-    #   expect { result = subject.parse("((\\a . b))") }.not_to raise_error
-    #   expect(result.first[:exp].first[:pair][:left][:exp].first[:character]).to eq("\\a")
-    #   expect(result.first[:exp].first[:pair][:right][:exp].first[:symbol]).to eq("b")
-    # end
-
     it "parses one with symbol and nested pair" do
       result = nil
       expect { result = subject.parse("((a . (b . c)))") }.not_to raise_error
@@ -78,17 +45,6 @@ RSpec.describe Babybel::Minibel do
       expect(right_pair[:left].first[:symbol]).to eq("b")
       expect(right_pair[:right][:symbol]).to eq("c")
     end
-
-    # it "parses one with nested pair and character" do
-    #   result = nil
-    #   expect { result = subject.parse("(((b . c) . \\a))") }.not_to raise_error
-
-    #   left_pair = result.first[:exp].first[:pair][:left][:exp].first[:pair]
-    #   expect(left_pair[:left][:exp].first[:symbol]).to eq("b")
-    #   expect(left_pair[:right][:exp].first[:symbol]).to eq("c")
-
-    #   expect(result.first[:exp].first[:pair][:right][:exp].first[:character]).to eq("\\a")
-    # end
   end
 
   context "lists" do
@@ -125,14 +81,6 @@ RSpec.describe Babybel::Minibel do
       expect(result.first[:exp][1][:exp].first[:symbol]).to eq("b")
       expect(result.first[:exp].last[:symbol]).to eq("c")
     end
-
-    # it "parses symbol with nested list followed by character" do
-    #   result = nil
-    #   expect { result = subject.parse("(a (b) \\c)") }.not_to raise_error
-    #   expect(result.first[:exp].first[:symbol]).to eq("a")
-    #   expect(result.first[:exp][1][:exp].first[:symbol]).to eq("b")
-    #   expect(result.first[:exp].last[:character]).to eq("\\c")
-    # end
   end
 
   context "strings" do
@@ -251,6 +199,39 @@ RSpec.describe Babybel::Minibel do
       expect(result.first[:pair][:left].first[:symbol]).to eq("a")
       expect(result.first[:pair][:right][:spliced]).not_to be_nil
       expect(result.first[:pair][:right][:symbol]).to eq("b")
+    end
+  end
+
+  context "bracket notation" do
+    it "parses empty" do
+      result = nil
+      expect { result = subject.parse("[]") }.not_to raise_error
+      expect(result.first[:bracket_exp]).not_to be_empty
+    end
+
+    it "parses example with three symbols" do
+      result = nil
+      expect { result = subject.parse("[f _ x]") }.not_to raise_error
+      expect(result.first[:bracket_exp]).not_to be_empty
+
+      bracket_exp = result.first[:bracket_exp][:exp]
+      expect(bracket_exp[0][:symbol]).to eq("f")
+      expect(bracket_exp[1][:symbol]).to eq("_")
+      expect(bracket_exp[2][:symbol]).to eq("x")
+    end
+
+    it "parses example with nested expression" do
+      result = nil
+      expect { result = subject.parse("[id _ (car args)]") }.not_to raise_error
+      expect(result.first[:bracket_exp]).not_to be_empty
+
+      bracket_exp = result.first[:bracket_exp][:exp]
+      expect(bracket_exp[0][:symbol]).to eq("id")
+      expect(bracket_exp[1][:symbol]).to eq("_")
+
+      final_bracket_exp = bracket_exp[2][:exp]
+      expect(final_bracket_exp.first[:symbol]).to eq("car")
+      expect(final_bracket_exp.last[:symbol]).to eq("args")
     end
   end
 end

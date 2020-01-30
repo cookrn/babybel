@@ -3,19 +3,26 @@ require "parslet"
 module Babybel
   class Minibel < Parslet::Parser
     root :multi_expression
-    rule(:multi_expression) { (expression | pair).repeat }
+    rule(:multi_expression) { (expression | pair | bracket_expression).repeat }
 
     rule(:expression) do
       space? >> backquote? >> str("(") >> space? >> body >> str(")") >> space?
     end
     
     rule(:pair) do
-      space? >> backquote? >> str("(") >> space? >> ((unquote? >> inner_body).repeat.as(:left) >> \
-        str(".") >> space? >> (unquote? >> inner_body).as(:right)).as(:pair) >> str(")") >> space?
+      space? >> backquote? >> str("(") >> space? >>
+        ((unquote? >> inner_body).repeat.as(:left) >>
+        str(".") >> space? >>
+        (unquote? >> inner_body).as(:right)).as(:pair) >>
+        str(")") >> space?
+    end
+
+    rule(:bracket_expression) do
+      space? >> backquote? >> str("[") >> space? >> body.as(:bracket_exp) >> str("]") >> space?
     end
     
     rule(:inner_body) do
-      expression | pair | symbol | string
+      expression | pair | bracket_expression | symbol | string
     end
 
     rule(:body) do
@@ -26,7 +33,7 @@ module Babybel
     rule(:space?) { space.maybe }
     
     rule(:symbol) do
-      (match("[a-zA-Z=*+]") >> match("[a-zA-Z=*_]").repeat).as(:symbol) >> space?
+      (match("[a-zA-Z=*+_]") >> match("[a-zA-Z=*_0-9]").repeat).as(:symbol) >> space?
     end
 
     rule(:quote) { str("'").as(:quoted) }
