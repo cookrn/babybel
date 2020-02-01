@@ -1,5 +1,6 @@
 require "babybel/minibel/parser"
 require "babybel/minibel/transformer"
+require "babybel/minibel/quoted"
 
 module Babybel
   module Minibel
