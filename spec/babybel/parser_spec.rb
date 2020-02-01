@@ -1,6 +1,14 @@
 require "spec_helper"
 
-RSpec.describe Babybel::Minibel do
+RSpec.describe Babybel::Parser do
+  context "comments" do
+    it "parses one" do
+      result = nil
+      expect { result = subject.parse("; some comment") }.not_to raise_error
+      expect(result.first[:comment]).to eq(" some comment")
+    end
+  end
+
   context "symbols" do
     it "parses one" do
       result = nil

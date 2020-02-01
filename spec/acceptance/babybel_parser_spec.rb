@@ -1,15 +1,15 @@
 require "spec_helper"
 
-RSpec.describe "Minibel Parser" do
-  let(:parser) { Babybel::Minibel::Parser.new }
-  let(:minibel_source) { Babybel::Minibel.minibel_source }
+RSpec.describe "Babybel Parser" do
+  let(:parser) { Babybel::Parser.new }
+  let(:bel_source) { Babybel.bel_source }
 
-  it "parses a subset of bel with which write an interpreter in bel" do
+  it "parses the full bel source" do
     parsed = false
     result = nil
 
     begin
-      result = parser.parse(minibel_source)
+      result = parser.parse(bel_source)
       parsed = true
     rescue Parslet::ParseFailed => error
       puts error.parse_failure_cause.ascii_tree
