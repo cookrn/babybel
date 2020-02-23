@@ -4,7 +4,7 @@ module Babybel
   module Minibel
     class Parser < Parslet::Parser
       root :multi_expression
-      rule(:multi_expression) { (comment | expression).repeat }
+      rule(:multi_expression) { (comment | expression | space).repeat }
 
       rule(:newline) { str("\n") >> str("\r").maybe }
       rule(:comment) do

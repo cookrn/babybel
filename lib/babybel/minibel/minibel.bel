@@ -1,3 +1,77 @@
-; vim: set syntax=lisp;
+; vim: syntax=lisp
 
-(_rb 'puts "hi")
+(_rb 'instance_eval "@self = self")
+(self)
+
+(_rb 'instance_eval "@const_get = ->(a) { @self.class.const_get(a) }")
+(const_get 'Array)
+
+(_rb 'instance_eval "@call = ->(a, b, *c) { a.public_send(b, *c) }")
+(call (const_get 'Array) 'new ("hi" "there"))
+
+
+
+
+
+
+; (_rb 'instance_eval "@nil = nil")
+; (_rb 'instance_eval "@t = true")
+; 
+; (_rb 'instance_eval "
+;   @id = ->(a, b) { if a.object_id == b.object_id then @t else @nil end }
+; ")
+; 
+; (id 'a 'a)
+; (id 'a 'b)
+; (id "a" "a")
+; (id '(a) '(a))
+; 
+; (_rb 'instance_eval "
+;   @join = ->(*a) { [*a] }
+; ")
+; 
+; (join 'a 'b)
+; (join 'a)
+; 
+; (_rb 'instance_eval "
+;   @car = ->(a = []) { if a == @nil then @nil else a.first end }
+; ")
+; 
+; (car '(a b))
+; (car nil)
+; 
+; (_rb 'instance_eval "
+;   @cdr = ->(a = []) { if a == @nil then @nil else a[1..-1] end }
+; ")
+; 
+; (cdr '(a b))
+; (cdr '(a b (c d)))
+; (cdr nil)
+; 
+; (_rb 'instance_eval "
+;   @type = ->(a = @nil) {
+;       case a
+;       when Symbol
+;         :symbol
+;       when String
+;         :string
+;       when Array
+;         :list
+;       else
+;         @nil
+;       end
+;     end
+;   }
+; ")
+; 
+; (type)
+; (type nil)
+; (type 'a)
+; (type "a")
+; (type '(a))
+; 
+; (_rb 'instance_eval "
+;   @xar = ->(a, b) {
+;     [b, @cdr(
+;   }
+; ")
