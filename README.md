@@ -1,3 +1,7 @@
+![Babybel Logo](https://raw.githubusercontent.com/cookrn/babybel/master/_assets/babybel.png)
+
+---------------------------------------------------
+
 # Babybel
 
 *Note: both of the below Lisp implementations are currently in progress.*
@@ -53,6 +57,7 @@ See the following:
 
 - Flea: https://github.com/aarongough/flea
 - Parslet Minilisp Example: https://github.com/kschiess/parslet/blob/master/example/minilisp.rb
+- Hy: https://docs.hylang.org/en/stable/index.html
 
 ## Development
 
@@ -65,5 +70,8 @@ To install this gem onto your local machine, run `bin/rake install`. To release 
 Bug reports and pull requests are welcome on GitHub at https://github.com/cookrn/babybel.
 
 ## License
+
+Obviously, no ownership, rights, copyright, or trademark of the Babybel name or
+logo were obtained or are implied with this project. Lisp is not cheese.
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
