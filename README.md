@@ -60,7 +60,7 @@ Other than Bel itself, see the following:
 - Parslet Minilisp Example: https://github.com/kschiess/parslet/blob/master/example/minilisp.rb
 - Hy: https://docs.hylang.org/en/stable/index.html
 
-Check out [this doc](https://github.com/cookrn/babybel/blob/master/docs/inspiration.md)
+Check out [this doc](https://github.com/cookrn/babybel/blob/master/docs/inspirations.md)
 as well for lots more links!
 
 ## Development
