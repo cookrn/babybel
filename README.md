@@ -8,7 +8,8 @@
 
 Babybel is Ruby gem containing two Lisp implementations:
 
-1. Bel as described in [the spec](https://sep.yimg.com/ty/cdn/paulgraham/bellanguage.txt?t=1570993483&)
+1. [Bel](http://paulgraham.com/bel.html) as described in
+   [the spec](https://sep.yimg.com/ty/cdn/paulgraham/bellanguage.txt?t=1570993483&)
    by Paul Graham. Status: non-functional.
 2. Minibel, a Bel-inspired Lisp tightly integrated with the Ruby object system and
    runtime. Status: barely functional.
@@ -53,11 +54,14 @@ Only the Minibel implementation is far enough along to use today as shown above.
 
 ## Inspirations
 
-See the following:
+Other than Bel itself, see the following:
 
 - Flea: https://github.com/aarongough/flea
 - Parslet Minilisp Example: https://github.com/kschiess/parslet/blob/master/example/minilisp.rb
 - Hy: https://docs.hylang.org/en/stable/index.html
+
+Check out [this doc](https://github.com/cookrn/babybel/blob/master/docs/inspiration.md)
+as well for lots more links!
 
 ## Development
 
